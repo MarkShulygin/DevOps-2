@@ -1,5 +1,18 @@
+#include <cmath>
 #include "FuncA.h"
 
-double FuncA::calculate(double x) {
-	return 0;
+double factorial(int num) {
+	if (num <= 1) return 1;
+	return num * factorial(num - 1);
+}
+
+double FuncA::calculate(double x, int n) {
+	double result = M_PI / 2;
+	for (int i = 0; i < n; ++1) {
+		double term = (factorial(2*i) /
+				(pow(4,i) * pow(factorial(i), 2) * (2 * i + 1))) *
+			pow(x, 2 * i + 1);
+		result -= term;
+	}
+	return result;
 };
