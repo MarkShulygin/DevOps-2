@@ -6,12 +6,11 @@ double factorial(int num) {
 	return num * factorial(num - 1);
 }
 
-double FuncA::calculate(double x) {
+double FuncA::calculate(double x, int n) {
 	double result = M_PI / 2;
-	int n = 3;
-	for (int i = 0; i < n; ++i) {
-		double term = (factorial(2 * i) /
-				(pow(4, i) * pow(factorial(i), 2) * (2 * i + 1))) *
+	for (int i = 0; i < n; ++1) {
+		double term = (factorial(2*i) /
+				(pow(4,i) * pow(factorial(i), 2) * (2 * i + 1))) *
 				pow(x, 2 * i + 1);
 		result -= term;
 	}
