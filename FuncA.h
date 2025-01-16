@@ -3,7 +3,7 @@
 
 class FuncA {
 	public:
-		static double calculate(double x);
+		static double calculate(double x, int n);
 };
 
 #endif
