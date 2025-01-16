@@ -117,7 +117,7 @@ am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
 am__v_at_0 = @
 am__v_at_1 = 
 DEFAULT_INCLUDES = -I.
-depcomp = $(SHELL) $(top_srcdir)/depcomp
+depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/FuncA.Po ./$(DEPDIR)/main.Po
 am__mv = mv -f
@@ -201,8 +201,11 @@ am__define_uniq_tagged_files = \
     if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
   done | $(am__uniquify_input)`
 AM_RECURSIVE_TARGETS = cscope
-am__DIST_COMMON = $(dist_man_MANS) $(srcdir)/Makefile.in README.md \
-	depcomp install-sh missing
+am__DIST_COMMON = $(dist_man_MANS) $(srcdir)/Makefile.in \
+	$(top_srcdir)/build-aux/depcomp \
+	$(top_srcdir)/build-aux/install-sh \
+	$(top_srcdir)/build-aux/missing README.md build-aux/depcomp \
+	build-aux/install-sh build-aux/missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -222,12 +225,12 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} '/home/ubuntu/DevOps-2/missing' aclocal-1.16
+ACLOCAL = ${SHELL} '/home/ubuntu/DevOps-2/build-aux/missing' aclocal-1.16
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} '/home/ubuntu/DevOps-2/missing' autoconf
-AUTOHEADER = ${SHELL} '/home/ubuntu/DevOps-2/missing' autoheader
-AUTOMAKE = ${SHELL} '/home/ubuntu/DevOps-2/missing' automake-1.16
+AUTOCONF = ${SHELL} '/home/ubuntu/DevOps-2/build-aux/missing' autoconf
+AUTOHEADER = ${SHELL} '/home/ubuntu/DevOps-2/build-aux/missing' autoheader
+AUTOMAKE = ${SHELL} '/home/ubuntu/DevOps-2/build-aux/missing' automake-1.16
 AWK = mawk
 CPPFLAGS = 
 CSCOPE = cscope
@@ -252,7 +255,7 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} '/home/ubuntu/DevOps-2/missing' makeinfo
+MAKEINFO = ${SHELL} '/home/ubuntu/DevOps-2/build-aux/missing' makeinfo
 MKDIR_P = /usr/bin/mkdir -p
 OBJEXT = o
 PACKAGE = devops2
@@ -289,7 +292,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/ubuntu/DevOps-2/install-sh
+install_sh = ${SHELL} /home/ubuntu/DevOps-2/build-aux/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -834,6 +837,10 @@ uninstall-man: uninstall-man1
 
 .PRECIOUS: Makefile
 
+
+.PHONY: deb
+deb:
+	make DESTDIR=$(CURDIR)/deb install
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

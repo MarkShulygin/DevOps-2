@@ -43,36 +43,36 @@ PATH: /snap/bin/
 ## ----------- ##
 
 configure:2006: looking for aux files: missing install-sh
-configure:2019:  trying ./
-configure:2048:   ./missing found
-configure:2030:   ./install-sh found
-configure:2177: checking for a BSD-compatible install
-configure:2250: result: /usr/bin/install -c
-configure:2261: checking whether build environment is sane
-configure:2316: result: yes
-configure:2475: checking for a race-free mkdir -p
-configure:2519: result: /usr/bin/mkdir -p
-configure:2526: checking for gawk
-configure:2561: result: no
-configure:2526: checking for mawk
-configure:2547: found /usr/bin/mawk
-configure:2558: result: mawk
-configure:2569: checking whether make sets $(MAKE)
-configure:2592: result: yes
-configure:2622: checking whether make supports nested variables
-configure:2640: result: yes
-configure:2845: checking for g++
-configure:2866: found /usr/bin/g++
-configure:2877: result: g++
-configure:2904: checking for C++ compiler version
-configure:2913: g++ --version >&5
+configure:2019:  trying ./build-aux/
+configure:2048:   ./build-aux/missing found
+configure:2030:   ./build-aux/install-sh found
+configure:2178: checking for a BSD-compatible install
+configure:2251: result: /usr/bin/install -c
+configure:2262: checking whether build environment is sane
+configure:2317: result: yes
+configure:2476: checking for a race-free mkdir -p
+configure:2520: result: /usr/bin/mkdir -p
+configure:2527: checking for gawk
+configure:2562: result: no
+configure:2527: checking for mawk
+configure:2548: found /usr/bin/mawk
+configure:2559: result: mawk
+configure:2570: checking whether make sets $(MAKE)
+configure:2593: result: yes
+configure:2623: checking whether make supports nested variables
+configure:2641: result: yes
+configure:2846: checking for g++
+configure:2867: found /usr/bin/g++
+configure:2878: result: g++
+configure:2905: checking for C++ compiler version
+configure:2914: g++ --version >&5
 g++ (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
 Copyright (C) 2021 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-configure:2924: $? = 0
-configure:2913: g++ -v >&5
+configure:2925: $? = 0
+configure:2914: g++ -v >&5
 Using built-in specs.
 COLLECT_GCC=g++
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/11/lto-wrapper
@@ -84,47 +84,47 @@ Thread model: posix
 Supported LTO compression algorithms: zlib zstd
 gcc version 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04) 
 ... rest of stderr output deleted ...
-configure:2924: $? = 0
-configure:2913: g++ -V >&5
+configure:2925: $? = 0
+configure:2914: g++ -V >&5
 g++: error: unrecognized command-line option '-V'
 g++: fatal error: no input files
 compilation terminated.
-configure:2924: $? = 1
-configure:2913: g++ -qversion >&5
+configure:2925: $? = 1
+configure:2914: g++ -qversion >&5
 g++: error: unrecognized command-line option '-qversion'; did you mean '--version'?
 g++: fatal error: no input files
 compilation terminated.
-configure:2924: $? = 1
-configure:2944: checking whether the C++ compiler works
-configure:2966: g++    conftest.cpp  >&5
-configure:2970: $? = 0
-configure:3020: result: yes
-configure:3023: checking for C++ compiler default output file name
-configure:3025: result: a.out
-configure:3031: checking for suffix of executables
-configure:3038: g++ -o conftest    conftest.cpp  >&5
-configure:3042: $? = 0
-configure:3065: result: 
-configure:3087: checking whether we are cross compiling
-configure:3095: g++ -o conftest    conftest.cpp  >&5
-configure:3099: $? = 0
-configure:3106: ./conftest
-configure:3110: $? = 0
-configure:3125: result: no
-configure:3130: checking for suffix of object files
-configure:3153: g++ -c   conftest.cpp >&5
-configure:3157: $? = 0
-configure:3179: result: o
-configure:3183: checking whether the compiler supports GNU C++
-configure:3203: g++ -c   conftest.cpp >&5
-configure:3203: $? = 0
-configure:3213: result: yes
-configure:3224: checking whether g++ accepts -g
-configure:3245: g++ -c -g  conftest.cpp >&5
-configure:3245: $? = 0
-configure:3289: result: yes
-configure:3309: checking for g++ option to enable C++11 features
-configure:3324: g++  -c -g -O2  conftest.cpp >&5
+configure:2925: $? = 1
+configure:2945: checking whether the C++ compiler works
+configure:2967: g++    conftest.cpp  >&5
+configure:2971: $? = 0
+configure:3021: result: yes
+configure:3024: checking for C++ compiler default output file name
+configure:3026: result: a.out
+configure:3032: checking for suffix of executables
+configure:3039: g++ -o conftest    conftest.cpp  >&5
+configure:3043: $? = 0
+configure:3066: result: 
+configure:3088: checking whether we are cross compiling
+configure:3096: g++ -o conftest    conftest.cpp  >&5
+configure:3100: $? = 0
+configure:3107: ./conftest
+configure:3111: $? = 0
+configure:3126: result: no
+configure:3131: checking for suffix of object files
+configure:3154: g++ -c   conftest.cpp >&5
+configure:3158: $? = 0
+configure:3180: result: o
+configure:3184: checking whether the compiler supports GNU C++
+configure:3204: g++ -c   conftest.cpp >&5
+configure:3204: $? = 0
+configure:3214: result: yes
+configure:3225: checking whether g++ accepts -g
+configure:3246: g++ -c -g  conftest.cpp >&5
+configure:3246: $? = 0
+configure:3290: result: yes
+configure:3310: checking for g++ option to enable C++11 features
+configure:3325: g++  -c -g -O2  conftest.cpp >&5
 conftest.cpp: In function 'int main(int, char**)':
 conftest.cpp:177:25: warning: empty parentheses were disambiguated as a function declaration [-Wvexing-parse]
   177 |   cxx11test::delegate d2();
@@ -134,18 +134,18 @@ conftest.cpp:177:25: note: remove parentheses to default-initialize a variable
       |                         ^~
       |                         --
 conftest.cpp:177:25: note: or replace parentheses with braces to value-initialize a variable
-configure:3324: $? = 0
-configure:3342: result: none needed
-configure:3409: checking whether make supports the include directive
-configure:3424: make -f confmf.GNU && cat confinc.out
+configure:3325: $? = 0
+configure:3343: result: none needed
+configure:3410: checking whether make supports the include directive
+configure:3425: make -f confmf.GNU && cat confinc.out
 this is the am__doit target
-configure:3427: $? = 0
-configure:3446: result: yes (GNU style)
-configure:3472: checking dependency style of g++
-configure:3584: result: gcc3
-configure:3738: checking that generated files are newer than configure
-configure:3744: result: done
-configure:3767: creating ./config.status
+configure:3428: $? = 0
+configure:3447: result: yes (GNU style)
+configure:3473: checking dependency style of g++
+configure:3585: result: gcc3
+configure:3739: checking that generated files are newer than configure
+configure:3745: result: done
+configure:3768: creating ./config.status
 
 ## ---------------------- ##
 ## Running config.status. ##
@@ -208,7 +208,7 @@ am_cv_make_support_nested_variables=yes
 ## Output variables. ##
 ## ----------------- ##
 
-ACLOCAL='${SHELL} '\''/home/ubuntu/DevOps-2/missing'\'' aclocal-1.16'
+ACLOCAL='${SHELL} '\''/home/ubuntu/DevOps-2/build-aux/missing'\'' aclocal-1.16'
 AMDEPBACKSLASH='\'
 AMDEP_FALSE='#'
 AMDEP_TRUE=''
@@ -217,9 +217,9 @@ AM_BACKSLASH='\'
 AM_DEFAULT_V='$(AM_DEFAULT_VERBOSITY)'
 AM_DEFAULT_VERBOSITY='1'
 AM_V='$(V)'
-AUTOCONF='${SHELL} '\''/home/ubuntu/DevOps-2/missing'\'' autoconf'
-AUTOHEADER='${SHELL} '\''/home/ubuntu/DevOps-2/missing'\'' autoheader'
-AUTOMAKE='${SHELL} '\''/home/ubuntu/DevOps-2/missing'\'' automake-1.16'
+AUTOCONF='${SHELL} '\''/home/ubuntu/DevOps-2/build-aux/missing'\'' autoconf'
+AUTOHEADER='${SHELL} '\''/home/ubuntu/DevOps-2/build-aux/missing'\'' autoheader'
+AUTOMAKE='${SHELL} '\''/home/ubuntu/DevOps-2/build-aux/missing'\'' automake-1.16'
 AWK='mawk'
 CPPFLAGS=''
 CSCOPE='cscope'
@@ -243,7 +243,7 @@ LDFLAGS=''
 LIBOBJS=''
 LIBS=''
 LTLIBOBJS=''
-MAKEINFO='${SHELL} '\''/home/ubuntu/DevOps-2/missing'\'' makeinfo'
+MAKEINFO='${SHELL} '\''/home/ubuntu/DevOps-2/build-aux/missing'\'' makeinfo'
 MKDIR_P='/usr/bin/mkdir -p'
 OBJEXT='o'
 PACKAGE='devops2'
@@ -281,7 +281,7 @@ host_alias=''
 htmldir='${docdir}'
 includedir='${prefix}/include'
 infodir='${datarootdir}/info'
-install_sh='${SHELL} /home/ubuntu/DevOps-2/install-sh'
+install_sh='${SHELL} /home/ubuntu/DevOps-2/build-aux/install-sh'
 libdir='${exec_prefix}/lib'
 libexecdir='${exec_prefix}/libexec'
 localedir='${datarootdir}/locale'
