@@ -7,7 +7,7 @@ main.o: main.cpp
 	g++ -g -Wall -c main.cpp
 
 FuncA.o: FuncA.cpp FuncA.h
-	g++ -g -Wall -FuncA.cpp
+	g++ -g -Wall -c -FuncA.cpp
 
 clean:
 	rm -rf -v *.o
