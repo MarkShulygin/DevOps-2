@@ -1,13 +1,14 @@
-CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++17
-SOURCES = ./main.cpp ./FuncA.cpp
-OBJECTS = $(SOURCES:.cpp=.o)
-TARGET = my_program
+all: devops2
 
-all: $(TARGET)
+devops2: main.o FuncA.o
+	g++ -g -Wall main.o FuncA.o -o funcA.elf
 
-$(TARGET): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+main.o: main.cpp
+	g++ -g -Wall -c main.cpp
+
+FuncA.o: FuncA.cpp FuncA.h
+	g++ -g -Wall -c FuncA.cpp
 
 clean:
-	rm -f $(TARGET) $(OBJECTS)
+	rm -rf -v *.o *.elf
+	rm -rf -v *.gch
