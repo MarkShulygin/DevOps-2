@@ -1,0 +1,5 @@
+Package: devops2
+Version: 0.1
+Architecture: all
+Maintainer: mark.shulyhin@lll.kpi.ua
+Description:The software completes math calculations
