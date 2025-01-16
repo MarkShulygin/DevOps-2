@@ -6,7 +6,7 @@ devops2: main.o FuncA.o
 main.o: main.cpp
 	g++ -g -Wall -c main.cpp
 
-FuncA.o: FuncA.cpp FuncA.h
+FuncA.o: ./FuncA.cpp ./FuncA.h
 	g++ -g -Wall -c -FuncA.cpp
 
 clean:
