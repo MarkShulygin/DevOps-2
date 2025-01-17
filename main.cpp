@@ -2,6 +2,7 @@
 #include "FuncA.h"
 
 int main() {
-	std::cout << "Result: " << FuncA::calculate() << std::endl;
+	FuncA func;
+	std::cout << "Result: " << func::calculate() << std::endl;
 	return 0;
 };
