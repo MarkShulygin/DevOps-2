@@ -1,7 +1,7 @@
 #ifndef FUNCA_H
 #define FUNCA_H
 
-class FuncA {
+class FuncA() {
 	public:
 		static double calculate();
 };
