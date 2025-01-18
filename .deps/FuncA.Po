@@ -1,5 +1,4 @@
-../FuncA.o: ../FuncA.cpp /usr/include/stdc-predef.h \
- /usr/include/c++/11/cmath \
+FuncA.o: FuncA.cpp /usr/include/stdc-predef.h /usr/include/c++/11/cmath \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -85,7 +84,7 @@
  /usr/include/c++/11/tr1/modified_bessel_func.tcc \
  /usr/include/c++/11/tr1/poly_hermite.tcc \
  /usr/include/c++/11/tr1/poly_laguerre.tcc \
- /usr/include/c++/11/tr1/riemann_zeta.tcc ../FuncA.h
+ /usr/include/c++/11/tr1/riemann_zeta.tcc FuncA.h
 /usr/include/stdc-predef.h:
 /usr/include/c++/11/cmath:
 /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h:
@@ -182,4 +181,4 @@
 /usr/include/c++/11/tr1/poly_hermite.tcc:
 /usr/include/c++/11/tr1/poly_laguerre.tcc:
 /usr/include/c++/11/tr1/riemann_zeta.tcc:
-../FuncA.h:
+FuncA.h:

@@ -1,15 +1,15 @@
 AUTOMAKE_OPTIONS = foreign
-
 bin_PROGRAMS = devops2
-devops2_SOURCES = main.cpp FuncA.cpp FuncA.h
+devops2_SOURCES = main.cpp FuncA.cpp FuncA.h HTTP_Server.cpp
 dist_man_MANS = devops2.1
 
-SUBDIR = tests
+SUBDIRS = tests
 
 CTRLF_DIR = $(CURDIR)/deb/DEBIAN
 CTRLF_NAME = $(CTRLF_DIR)/control
 
 .PHONY: deb debug
+
 deb:
 	mkdir -p $(CTRLF_DIR)
 	echo Package: $(PACKAGE) > $(CTRLF_NAME)
@@ -18,7 +18,7 @@ deb:
 	echo Maintainer: $(PACKAGE_BUGREPORT) >> $(CTRLF_NAME)
 	echo -n "Description:" >> $(CTRLF_NAME)
 	cat devops2.1 >> $(CTRLF_NAME)
-	make DESTDIR=$(CURDIR)/deb install
+	make DESTDIR = $(CURDIR)/deb install
 
 debug:
-	$(foreach v, $(>VARIABLES), $(info $(v)=$($(v))))
+	$(foreach v, $(.VARIABLES), $(info $(v)=$($(v))))
