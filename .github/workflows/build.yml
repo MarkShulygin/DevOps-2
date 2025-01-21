@@ -29,7 +29,7 @@ jobs:
         run: make distcheck
 
       - name: Log in to dokcerhub
-        run: docker login -u ${{ vars.DOCKER_USERNAME }} -p {{ secrets.DOKCER_TOCKERN }}
+        run: docker login -u ${{ vars.DOCKER_USERNAME }} -p {{ secrets.DOCKER_TOKEN }}
 
       - name: Build Dockerfile image
         run: docker build --platform=linux/amd64 -t markshulyhin/funcaserv --push .
