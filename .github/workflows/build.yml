@@ -1,12 +1,10 @@
-name: Build C++ Program
+name: Build and Push Docker Image
 
 on:
   push:
-    branches: [ "*" ]
+    branches: [ "branchHTTPserver" ]
   pull_request: 
-    branches: [ "*" ]
-  workflow_dispatch:
-    branch: [ "*" ]
+    branches: [ "branchHTTPserver" ]
 
 jobs:
   build:
@@ -15,23 +13,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: ./configure
-        run: ./configure
-
-      - name: make
-        run: make
-
-      - name: Run check
-        run: make check
-
-      - name: Run distcheck
-        run: make distcheck
-
-      - name: Log in to dokcerhub
-        run: docker login -u ${{ vars.DOCKER_USERNAME }} -p {{ secrets.DOCKER_TOKEN }}
-
-      - name: Build Dockerfile image
-        run: docker build --platform=linux/amd64 -t markshulyhin/funcaserv --push .
-        
-        
+      - name: QEMU install
+        uses: docker/setup-qemu-action@v3
+      - name: Install Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: build ls
+        run: docker buildx ls
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Build Dockerfile image (amd64)
+        run: docker build --platform linux/amd64 -t markshulyhin/funcaserv:amd64 --push -f ./Dockerfile .
+      - name: Build Dockerfile image(arm64)
+        run: docker build --platform=linux/arm64 -t markshulyhin/funcaserv:arm64 --push -f ./Dockerfile .
+      - name: Manifest
+        run: docker manifest create markshulyhin/funcaserv --amend markshulyhin/funcaserv:amd64 --amend markshulyhin/funcaserv:arm64
+      - name: Push manifest
+        run: docker manifest push markshulyhin/funcaserv
