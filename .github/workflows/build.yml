@@ -31,10 +31,10 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
           
       - name: Build Dockerfile image (amd64)
-        run: docker build --platform linux/amd64 -t markshulyhin/funcaserv:amd64 --push -f /Dockerfile .
+        run: docker build --platform linux/amd64 -t markshulyhin/funcaserv:amd64 --push -f ./Dockerfile .
         
       - name: Build Dockerfile image(arm64)
-        run: docker build --platform=linux/arm64 -t markshulyhin/funcaserv:arm64 --push -f /Dockerfile .
+        run: docker build --platform=linux/arm64 -t markshulyhin/funcaserv:arm64 --push -f ./Dockerfile .
         
       - name: Manifest
         run: docker manifest create markshulyhin/funcaserv --amend markshulyhin/funcaserv:amd64 --amend markshulyhin/funcaserv:arm64
