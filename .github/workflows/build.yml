@@ -1,27 +1,31 @@
-name: Build C++ Program
+name: DockerfileTest
 
 on:
   push:
-    branches: [ "branchAutoTest" ]
-  pull_request: 
-    branches: [ "branchAutoTest" ]
-  workflow_dispatch:
-    branch: [ "branchAutoTest" ]
+    branches:
+      - branchHTTPserverMutli
+  pull_request:
+    branches:
+      - branchHTTPserverMutli
 
 jobs:
   build:
-  
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
       - name: ./configure
         run: ./configure
-
-      - name: make
-        run: make
-
-      - name: Autotest
-        run: cd ./tests && make check
         
+      - name: make
+        run: run
+
+      - name: Run distcheck
+        run: make distcheck
+
+      - name: build ls
+        run: docker buildx ls
+
+      - name: Log in to dockerhub
+        run: docker login -u ${{ vars.DOCKER_USERNAME }} -p {{ secrets.DOCKER_TOKEN }}
