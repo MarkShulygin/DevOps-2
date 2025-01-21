@@ -10,7 +10,7 @@
 #include <sys/sendfile.h>
 #include <sys/stat.h>
 #include <errno.h>
-
+#include "FuncA.h"
 #include <vector>
 #include <random>
 #include <chrono>
@@ -168,6 +168,50 @@ int CreateHTTPserver()
 
 			write(clientSocket, strTimeEllapsed, strlen(strTimeEllapsed));
 			printf("%s\n", strTimeEllapsed);
+		}
+		else if (!strcmp(strHTTP_requestPath, "/mathcalc")) {
+			auto t1 = std::chrono::high_resolution_clock::now();
+
+			std::vector<double> values;
+			for (int i=0; i < 100; i++) {
+				double result = FuncA::calculate();
+				values.push_back(result);
+			}
+
+			for (int i=0; i<50; i++)
+			{
+				std::sort(std::begin(values), std::end(values));
+			}
+
+			auto t2 = std::chrono::high_resolution_clock::now();
+			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count();
+
+			if (duration > 20000 || duration < 5000)
+		       	{
+				std::string error_response = "Error: Exuction time exceeded 20 seconds (" + std::to_string(duration) + " ms)";
+				char strResponse[100];
+				sprintf(strResponse, "%sContent-Type: text/plain\r\nConten-Length: %ld\r\n\r\n", HTTP_200HEADER, error_response.size());
+				write(clientSocket, strResponse, strlen(strResponse));
+				write(clientSocket, error_response.c_str(), error_response.size());
+				printf("Response sent: %s\n", error_response.c_str());
+				return 1;
+			}
+			
+			std::string array_output;
+			for (const auto &value : values) {
+				array_output += std::to_string(value) + ",";
+			}
+
+			
+			std::string response = "Time elapsed: " + std::to_string(duration) + " ms\n";
+			response += "Sorted values: [" + array_output +"]\n";
+
+			char strResponse[100];
+			sprintf(strResponse, "%sContent-Type: text/plain\r\nContent-Length: %ld\r\n\r\n", HTTP_200HEADER, response.size());
+			write(clientSocket, strResponse, strlen(strResponse));
+			write(clientSocket, response.c_str(), response.size());
+
+			printf("Response sent: %s\n", response.c_str());
 		}
 		else if ((!strcmp(strHTTPreqExt, "JPG")) || (!strcmp(strHTTPreqExt, "jpg")))
                 {

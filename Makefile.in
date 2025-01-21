@@ -962,9 +962,9 @@ uninstall-man: uninstall-man1
 
 .PRECIOUS: Makefile
 
+devops2_LDFLAGS -static 
 
 .PHONY: deb debug
-
 deb:
 	mkdir -p $(CTRLF_DIR)
 	echo Package: $(PACKAGE) > $(CTRLF_NAME)
