@@ -2,11 +2,11 @@ name: Build C++ Program
 
 on:
   push:
-    branches: [ "branchAutoTest" ]
+    branches: [ "*" ]
   pull_request: 
-    branches: [ "branchAutoTest" ]
+    branches: [ "*" ]
   workflow_dispatch:
-    branch: [ "branchAutoTest" ]
+    branch: [ "*" ]
 
 jobs:
   build:
@@ -22,6 +22,16 @@ jobs:
       - name: make
         run: make
 
-      - name: Autotest
-        run: cd ./tests && make check
+      - name: Run check
+        run: make check
+
+      - name: Run distcheck
+        run: make distcheck
+
+      - name: Log in to dokcerhub
+        run: docker login -u ${{ vars.DOCKER_USERNAME }} -p {{ secrets.DOKCER_TOCKERN }}
+
+      - name: Build Dockerfile image
+        run: docker build --platform=linux/amd64 -t markshulyhin/funcaserv --push .
+        
         
