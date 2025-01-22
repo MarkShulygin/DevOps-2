@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include "../FuncA.h"
+#include "../FuncA.cpp"
 
 int main() {
 
