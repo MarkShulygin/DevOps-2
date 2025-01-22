@@ -173,12 +173,12 @@ int CreateHTTPserver()
 			auto t1 = std::chrono::high_resolution_clock::now();
 
 			std::vector<double> values;
-			for (int i=0; i < 500; i++) {
+			for (int i=0; i < 300000; i++) {
 				double result = FuncA::calculate();
 				values.push_back(result);
 			}
 
-			for (int i=0; i<50; i++)
+			for (int i=0; i<100; i++)
 			{
 				std::sort(std::begin(values), std::end(values));
 			}
