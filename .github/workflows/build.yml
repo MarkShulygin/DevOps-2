@@ -13,22 +13,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Install QEMU
-        uses: docker/setup-buildx-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      - name: build ls
-        run: docker buildx ls
-        
-      - name: ./configure
-        run: ./configure
-        
-      - name: make
-        run: run
-
-      - name: Run distcheck
-        run: make distcheck
-
-      - name: Log in to dockerhub
-        run: docker login -u ${{ vars.DOCKER_USERNAME }} -p {{ secrets.DOCKER_TOKEN }}
+      - name: Build Dokcer image
+        run: |
+          docker build -f ./Dokcerfile -t markshulyhin/funcaserv .
