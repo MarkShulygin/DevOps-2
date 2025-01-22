@@ -1,0 +1,59 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - branchHTTPserver
+  pull_request:
+    branches:
+      - branchHTTPserver
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install autotools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y autoconf automake libtool libcurl4-openssl-dev
+
+      - name: Run autoreconf
+        run: |
+          autoreconf --install
+
+      - name: Run ./configure
+        run: |
+          ./configure
+
+      - name: Build funcA server
+        run: |
+          make
+
+      - name: Run funcA server
+        run: |
+          ./devops2 &
+          
+      - name: Wait for server to start
+        run: |
+          sleep 5
+
+      - name: Run tests
+        run: |
+          g++ tests/main.cpp -o tests/main.out -I/usr/include/curl -L/usr/lib/x86_64-linux-gnu -lcurl
+          ./tests/main.out
+
+      - name: Check Docker image trembachanna/funcaserver
+        run: |
+          docker pull trembachanna/funcaserver
+          docker run -d --name devops2-check markshulyhin/funcaserv
+          docker ps -a
+
+      - name: Stop server and containers
+        run: |
+          pkill devops2
+          docker stop devops2-check
+          docker rm devops2-check
