@@ -105,6 +105,8 @@ am_devops2_OBJECTS = main.$(OBJEXT) FuncA.$(OBJEXT) \
 	HTTP_Server.$(OBJEXT)
 devops2_OBJECTS = $(am_devops2_OBJECTS)
 devops2_LDADD = $(LDADD)
+devops2_LINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(devops2_LDFLAGS) \
+	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -358,6 +360,7 @@ top_builddir = .
 top_srcdir = .
 AUTOMAKE_OPTIONS = foreign
 devops2_SOURCES = main.cpp FuncA.cpp FuncA.h HTTP_Server.cpp
+devops2_LDFLAGS = -static 
 dist_man_MANS = devops2.1
 SUBDIRS = tests
 CTRLF_DIR = $(CURDIR)/deb/DEBIAN
@@ -444,7 +447,7 @@ clean-binPROGRAMS:
 
 devops2$(EXEEXT): $(devops2_OBJECTS) $(devops2_DEPENDENCIES) $(EXTRA_devops2_DEPENDENCIES) 
 	@rm -f devops2$(EXEEXT)
-	$(AM_V_CXXLD)$(CXXLINK) $(devops2_OBJECTS) $(devops2_LDADD) $(LIBS)
+	$(AM_V_CXXLD)$(devops2_LINK) $(devops2_OBJECTS) $(devops2_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -964,7 +967,6 @@ uninstall-man: uninstall-man1
 
 
 .PHONY: deb debug
-
 deb:
 	mkdir -p $(CTRLF_DIR)
 	echo Package: $(PACKAGE) > $(CTRLF_NAME)
