@@ -1,10 +1,10 @@
 #!/bin/bash
 
-SERVER_URL="127.0.0.1/mathcalc"
+SERVER_URL="127.0.0.1/compute"
 
 make_request() {
     curl -s -X GET "$SERVER_URL" > /dev/null
-    echo "Request has been sent out"
+    echo "Request was sent"
 }
 
 while true; do

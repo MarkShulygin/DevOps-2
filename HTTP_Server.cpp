@@ -142,7 +142,7 @@ int CreateHTTPserver()
 			std::mt19937 mtre {123};
 			std::uniform_int_distribution<int> distr {0, 2000000};
 
-			for (int i=0; i<2000000; i++) {
+			for (int i=0; i<800000; i++) {
 				aValues.push_back(distr(mtre));
 			}
 
@@ -173,12 +173,12 @@ int CreateHTTPserver()
 			auto t1 = std::chrono::high_resolution_clock::now();
 
 			std::vector<double> values;
-			for (int i=0; i < 300000; i++) {
+			for (int i=0; i < 1000000; i++) {
 				double result = FuncA::calculate();
 				values.push_back(result);
 			}
 
-			for (int i=0; i<100; i++)
+			for (int i=0; i<200; i++)
 			{
 				std::sort(std::begin(values), std::end(values));
 			}

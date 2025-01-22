@@ -1,7 +1,7 @@
 #!/bin/bash
 
 container_image=("markshulyhin/funcaserv")
-containers=("srv1""srv2""srv3")
+containers=("srv1" "srv2" "srv3")
 cpu_cores=(0 1 2)
 ports=(8080 8081 8082)
 UPDATE_INTERVAL=600
@@ -47,14 +47,14 @@ cpu_use() {
 
 busy() {
 	local use=$(cpu_use "$1")
-	echo "Using core by container $1: $usage%"
-	(( $(echo "$use > 95" | bc -1) ))
+	echo "Using core by container $1: $use%"
+	(( $(echo "$use > 95" | bc -l) ))
 }
 
 is_idle() {
 	local use=$(cpu_use "$1")
-	echo "Using core by container $1: $usage%"
-	(( $(echo "$use < 5" | bc -1) ))
+	echo "Using core by container $1: $use%"
+	(( $(echo "$use < 5" | bc -l) ))
 }
 
 stop_con() {
@@ -84,7 +84,7 @@ update() {
 			start_con "srv1" 0 8080
 		fi
 	else
-		echo "No new versions"
+		echo "No updates available"
 		
 	fi
 }
