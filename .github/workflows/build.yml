@@ -19,6 +19,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build Dokcer image
+      - name: Build Docker image
         run: |
-          docker build -f ./Dokcerfile -t markshulyhin/funcaserv .
+          docker build -f ./Dockerfile -t markshulyhin/funcaserv .
