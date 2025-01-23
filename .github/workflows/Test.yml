@@ -46,7 +46,7 @@ jobs:
           g++ tests/main.cpp -o tests/main.out -I/usr/include/curl -L/usr/lib/x86_64-linux-gnu -lcurl
           ./tests/main.out
 
-      - name: Check Docker image trembachanna/funcaserver
+      - name: Check Docker image markshulyhin/funcaserv
         run: |
           docker pull trembachanna/funcaserver
           docker run -d --name devops2-check markshulyhin/funcaserv
