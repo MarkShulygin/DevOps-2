@@ -1,57 +1,67 @@
 #!/bin/bash
 
-IMAGE_NAME="markshulyhin/funcaserv"
-CONTAINERS=("srv1" "srv2" "srv3")
+# Configuration Parameters
+IMAGE="markshulyhin/funcaserv"
+CONTAINER_NAMES=("srv1" "srv2" "srv3")
 CPU_CORES=(0 1 2)
-PORTS=(8080 8081 8082)
-UPDATE_INTERVAL=600     
-CHECK_INTERVAL=30    
-START_DELAY=60
+PORT_MAPPING=(8080 8081 8082)
+UPDATE_FREQUENCY=600
+MONITOR_INTERVAL=30
+STARTUP_DELAY=60     
 
+# Associative Arrays for Tracking
+declare -A container_launch_times
+declare -A container_cpu_usage
+declare -A container_status
 
-declare -A container_start_time
-declare -A container_busy_time
-declare -A container_idle_time
+# Function to log messages with timestamps
+log_message() {
+    local message="$1"
+    echo "State: $message"
+}
 
-
-remove_existing_containers() {
-    for container in "${CONTAINERS[@]}"; do
+# Function to remove containers if they exist
+cleanup_containers() {
+    for container in "${CONTAINER_NAMES[@]}"; do
         if docker ps -a --format '{{.Names}}' | grep -q "^$container"; then
-            echo "Removing existing container: $container"
+            log_message "Removing existing container: $container"
             if ! docker rm -f "$container" >/dev/null 2>&1; then
-                log_error "Failed to remove container: $container"
+                log_message "Error: Failed to remove container $container"
                 return 1
             fi
         fi
     done
 }
 
-start_container() {
-    local container_name=\$1
-    local cpu_core=\$2
-    local port=\$3
-    if docker ps --format '{{.Names}}' | grep -q "$container_name"; then
-        echo "Container $container_name is already running."
+# Function to start a container with specified parameters
+launch_container() {
+    local name=$1
+    local cpu_core=$2
+    local port=$3
+    if docker ps --format '{{.Names}}' | grep -q "$name"; then
+        log_message "Container $name is already running."
         return 0
     fi
-    echo "Starting container: $container_name on CPU core $cpu_core and port $port"
-    if ! docker run --name "$container_name" --cpuset-cpus="$cpu_core" -p "$port":8081 --rm -d "$IMAGE_NAME" >/dev/null 2>&1; then
-        log_error "Failed to start container: $container_name"
+    log_message "Launching container: $name on CPU core $cpu_core and port $port"
+    if ! docker run --name "$name" --cpuset-cpus="$cpu_core" -p "$port":8081 --rm -d "$IMAGE" >/dev/null 2>&1; then
+        log_message "Error: Failed to start container $name"
         return 1
     fi
-    container_start_time["$container_name"]=$(date +%s)
-    sleep "$START_DELAY"
+    container_launch_times["$name"]=$(date +%s)
+    sleep "$STARTUP_DELAY"
 }
 
-get_container_cpu_usage() {
-    local container_name=\$1
-    docker stats "$container_name" --no-stream --format "{{.CPUPerc}}" | tr -d '%'
+# Function to retrieve CPU usage of a container
+fetch_cpu_usage() {
+    local name=$1
+    docker stats "$name" --no-stream --format "{{.CPUPerc}}" | tr -d '%'
 }
 
-is_container_busy() {
-    local container_name=\$1
-    local usage=$(get_container_cpu_usage "$container_name")
-    echo "Container $container_name CPU usage: $usage%"
+# Function to determine if a container is busy
+is_busy() {
+    local name=$1
+    local usage=$(fetch_cpu_usage "$name")
+    container_cpu_usage["$name"]=$usage
     if (( $(echo "$usage > 95" | bc -l) )); then
         return 0
     else
@@ -59,10 +69,11 @@ is_container_busy() {
     fi
 }
 
-is_container_idle() {
-    local container_name=\$1
-    local usage=$(get_container_cpu_usage "$container_name")
-    echo "Container $container_name CPU usage: $usage%"
+# Function to determine if a container is idle
+is_idle() {
+    local name=$1
+    local usage=$(fetch_cpu_usage "$name")
+    container_cpu_usage["$name"]=$usage
     if (( $(echo "$usage < 5" | bc -l) )); then
         return 0
     else
@@ -70,100 +81,87 @@ is_container_idle() {
     fi
 }
 
+# Function to stop a container
 stop_container() {
-    local container_name=\$1
-    echo "Stopping container: $container_name"
-    if ! docker stop "$container_name" >/dev/null 2>&1; then
-        log_error "Failed to stop container: $container_name"
+    local name=$1
+    log_message "Stopping container: $name"
+    if ! docker stop "$name" >/dev/null 2>&1; then
+        log_message "Error: Failed to stop container $name"
         return 1
     fi
 }
 
-check_for_updates() {
-    echo "Checking for updates to the container image..."
-    if ! docker pull "$IMAGE_NAME" >/dev/null 2>&1; then
-        log_error "Failed to pull the latest image: $IMAGE_NAME"
+# Function to check for and apply updates
+check_for_updates_and_apply() {
+    log_message "Checking for updates to the container image..."
+    if ! docker pull "$IMAGE" >/dev/null 2>&1; then
+        log_message "Error: Failed to pull the latest image $IMAGE"
         return 1
     fi
-    latest_digest=$(docker inspect --format '{{index .RepoDigests 0}}' "$IMAGE_NAME" | grep -oP 'sha256:[a-f0-9]{64}')
-    current_digest=$(docker inspect --format '{{index .RepoDigests 0}}' "$IMAGE_NAME" | grep -oP 'sha256:[a-f0-9]{64}')
+    latest_digest=$(docker inspect --format '{{index .RepoDigests 0}}' "$IMAGE" | grep -oP 'sha256:[a-f0-9]{64}')
+    current_digest=$(docker inspect --format '{{index .RepoDigests 0}}' "$IMAGE" | grep -oP 'sha256:[a-f0-9]{64}')
     if [[ "$latest_digest" != "$current_digest" ]]; then
-        echo "New image version detected. Updating containers..."
-        for container in "${CONTAINERS[@]}"; do
+        log_message "New image version detected. Updating containers..."
+        for container in "${CONTAINER_NAMES[@]}"; do
             if docker ps --format '{{.Names}}' | grep -q "$container"; then
                 if [[ "$container" != "srv1" && $(docker ps --format '{{.Names}}' | grep -q "srv1") ]]; then
                     stop_container "$container"
-                    start_container "$container" 1 8081
+                    launch_container "$container" 1 8081
                     break
                 fi
             fi
         done
-        start_container "srv2" 1 8081
+        launch_container "srv2" 1 8081
         if docker ps --format '{{.Names}}' | grep -q "srv1"; then
             stop_container "srv1"
-            start_container "srv1" 0 8080
+            launch_container "srv1" 0 8080
         fi
     else
-        echo "No updates available for the container image."
+        log_message "No updates available for the container image."
     fi
 }
 
-manage_container_state() {
-    for container in "${CONTAINERS[@]}"; do
+# Function to monitor and manage container states
+monitor_containers() {
+    for container in "${CONTAINER_NAMES[@]}"; do
         if docker ps --format '{{.Names}}' | grep -q "$container"; then
-            elapsed_time=$(( $(date +%s) - ${container_start_time[$container]} ))
-            if [[ $elapsed_time -lt $START_DELAY ]]; then
-                echo "Container $container was started, waiting for $START_DELAY seconds before checking."
+            elapsed_time=$(( $(date +%s) - ${container_launch_times[$container]} ))
+            if [[ $elapsed_time -lt $STARTUP_DELAY ]]; then
+                log_message "Container $container was started, waiting for $STARTUP_DELAY seconds before checking."
                 continue
             fi
-            if is_container_busy "$container"; then
-                container_busy_time["$container"]=$(( ${container_busy_time[$container]:-0} + 1 ))
-                container_idle_time["$container"]=0
-                echo "Container $container is busy for ${container_busy_time[$container]} minutes."
-                if [[ "$container" == "srv1" && ${container_busy_time["srv1"]} -ge 2 && ! $(docker ps --format '{{.Names}}' | grep -q "srv2") ]]; then
-                    start_container "srv2" 1 8081
-                elif [[ "$container" == "srv2" && ${container_busy_time["srv2"]} -ge 2 && ! $(docker ps --format '{{.Names}}' | grep -q "srv3") ]]; then
-                    start_container "srv3" 2 8082
+            if is_busy "$container"; then
+                container_status["$container"]="busy"
+                log_message "Container $container is busy with CPU usage ${container_cpu_usage[$container]}%."
+                if [[ "$container" == "srv1" && ${container_status["srv1"]} == "busy" && ! $(docker ps --format '{{.Names}}' | grep -q "srv2") ]]; then
+                    launch_container "srv2" 1 8081
+                elif [[ "$container" == "srv2" && ${container_status["srv2"]} == "busy" && ! $(docker ps --format '{{.Names}}' | grep -q "srv3") ]]; then
+                    launch_container "srv3" 2 8082
                 fi
-            elif is_container_idle "$container"; then
-                container_idle_time["$container"]=$(( ${container_idle_time["$container"]: -0} + 1 ))
-                container_busy_time["$container"]=0
-                echo "Container $container is idle for ${container_idle_time["$container"]} minutes."
-                if [[ ${container_idle_time["$container"]} -ge 2 && "$container" != "srv1" ]]; then
+            elif is_idle "$container"; then
+                container_status["$container"]="idle"
+                log_message "Container $container is idle with CPU usage ${container_cpu_usage[$container]}%."
+                if [[ ${container_status["$container"]} == "idle" && "$container" != "srv1" ]]; then
                     stop_container "$container"
                 fi
             else
-                container_busy_time["$container"]=0
-                container_idle_time["$container"]=0
+                container_status["$container"]="active"
+                log_message "Container $container is active with CPU usage ${container_cpu_usage[$container]}%."
             fi
         fi
     done
 }
 
-log_error() {
-    echo "\$1" >&2
-    logger "\$1"
-}
-
-cleanup_resources() {
-    echo "Cleaning up containers..."
-    for container in "${CONTAINERS[@]}"; do
-        if docker ps --format '{{.Names}}' | grep -q "$container"; then
-            stop_container "$container"
-        fi
-    done
-}
-
-trap cleanup_resources EXIT
-
+# Main Execution Loop
 main() {
-    remove_existing_containers
-    start_container "srv1" 0 8080
+    cleanup_containers
+    launch_container "srv1" 0 8080
     while true; do
-        check_for_updates
-        manage_container_state
-        sleep "$CHECK_INTERVAL"
+        check_for_updates_and_apply
+        monitor_containers
+        sleep "$MONITOR_INTERVAL"
     done
 }
 
+# Execute the script
 main
