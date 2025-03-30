@@ -154,20 +154,27 @@ int CreateHTTPserver()
 
 			
 			auto t2 = std::chrono::high_resolution_clock::now();
-			auto int_ms = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1);
-
+			auto int_ms = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 			int iMS = int_ms.count();
 
-			char strTimeEllapsed[20];
-			sprintf(strTimeEllapsed, "%i", iMS);
+			char strTimeElapsed[100];
+			char message[100];
 
-			sprintf(strResponse, "%sContent-type: text/html\r\nContent-Length: %ld\r\n\r\n", HTTP_200HEADER, strlen(strTimeEllapsed));
-			
+
+			if (iMS < 5000) {
+   			 	snprintf(message, sizeof(message), "Too fast! (%d ms)", iMS);
+			} else if (iMS > 20000) {
+    				snprintf(message, sizeof(message), "Too slow! (%d ms)", iMS);
+			} else {
+    				snprintf(message, sizeof(message), "Perfect execution time: %d ms", iMS);
+			}
+
+			sprintf(strResponse, "%sContent-type: text/html\r\nContent-Length: %lu\r\n\r\n", HTTP_200HEADER, strlen(message));
+
 			write(clientSocket, strResponse, strlen(strResponse));
-			printf("\nResponse: \n%s\n", strResponse);
+			write(clientSocket, message, strlen(message));
 
-			write(clientSocket, strTimeEllapsed, strlen(strTimeEllapsed));
-			printf("%s\n", strTimeEllapsed);
+			printf("\nResponse sent: %s\n", message);
 		}
 		else if ((!strcmp(strHTTPreqExt, "JPG")) || (!strcmp(strHTTPreqExt, "jpg")))
                 {
